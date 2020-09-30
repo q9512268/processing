@@ -34,274 +34,235 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 
 import processing.app.*;
+import processing.app.contrib.ModeContribution;
 import processing.app.ui.Editor;
 import processing.app.ui.EditorException;
 import processing.app.ui.EditorState;
 import processing.mode.java.runner.Runner;
 import processing.mode.java.tweak.SketchParser;
 
-
 public class JavaModeTESTER extends Mode {
 
-  public Editor createEditor(Base base, String path,
-                             EditorState state) throws EditorException {
-    return new JavaEditor(base, path, state, this);
-  }
+	public Editor createEditor(Base base, String path, EditorState state) throws EditorException {
+		return new JavaEditor(base, path, state, this);
+	}
 
-
-  public JavaModeTESTER(Base base, File folder) {
-    super(base, folder);
+	public JavaModeTESTER(Base base, File folder) {
+		super(base, folder);
 
 //    initLogger();
-    loadPreferences();
-  }
+		loadPreferences();
+	}
 
+	public String getTitle() {
+		return "Java";
+	}
 
-  public String getTitle() {
-    return "Java";
-  }
+	// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
+	public File[] getExampleCategoryFolders() {
+		return new File[] { new File(examplesFolder, "Basics"), new File(examplesFolder, "Topics"),
+				new File(examplesFolder, "Demos"), new File(examplesFolder, "Books") };
+	}
 
-  // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+	public String getDefaultExtension() {
+		return "pde";
+	}
 
+	public String[] getExtensions() {
+		return new String[] { "pde", "java" };
+	}
 
-  public File[] getExampleCategoryFolders() {
-    return new File[] {
-      new File(examplesFolder, "Basics"),
-      new File(examplesFolder, "Topics"),
-      new File(examplesFolder, "Demos"),
-      new File(examplesFolder, "Books")
-    };
-  }
+	public String[] getIgnorable() {
+		return new String[] { "applet", "application.macosx", "application.windows", "application.linux" };
+	}
 
+	public Library getCoreLibrary() {
+		if (coreLibrary == null) {
+			File coreFolder = Platform.getContentFile("core");
+			coreLibrary = new Library(coreFolder);
+		}
+		return coreLibrary;
+	}
 
-  public String getDefaultExtension() {
-    return "pde";
-  }
+	public boolean handleExportApplication(Sketch sketch) throws SketchException, IOException {
+		JavaBuild build = new JavaBuild(sketch);
+		return build.exportApplication();
+	}
 
+	/**
+	 * Any modes that extend JavaMode can override this method to add additional
+	 * JARs to be included in the classpath for code completion and error checking
+	 * 
+	 * @return searchPath: file-paths separated by File.pathSeparatorChar
+	 */
+	public String getSearchPath() {
+		return getCoreLibrary().getJarPath();
+	}
 
-  public String[] getExtensions() {
-    return new String[] { "pde", "java" };
-  }
+	static public volatile boolean errorCheckEnabled = true;
+	static public volatile boolean warningsEnabled = true;
+	static public volatile boolean codeCompletionsEnabled = true;
+	static public volatile boolean debugOutputEnabled = false;
+	static public volatile boolean errorLogsEnabled = false;
+	static public volatile boolean autoSaveEnabled = true;
+	static public volatile boolean autoSavePromptEnabled = true;
+	static public volatile boolean defaultAutoSaveEnabled = true;
+	static public volatile boolean ccTriggerEnabled = false;
+	static public volatile boolean importSuggestEnabled = true;
+	static public volatile boolean inspectModeHotkeyEnabled = true;
+	static public int autoSaveInterval = 3; // in minutes
 
+	/**
+	 * After how many typed characters, code completion is triggered
+	 */
+	volatile public static int codeCompletionTriggerLength = 1;
 
-  public String[] getIgnorable() {
-    return new String[] {
-      "applet",
-      "application.macosx",
-      "application.windows",
-      "application.linux"
-    };
-  }
+	static public final String prefErrorCheck = "pdex.errorCheckEnabled";
+	static public final String prefWarnings = "pdex.warningsEnabled";
+	static public final String prefDebugOP = "pdex.dbgOutput";
+	static public final String prefErrorLogs = "pdex.writeErrorLogs";
+	static public final String prefAutoSaveInterval = "pdex.autoSaveInterval";
+	static public final String prefAutoSave = "pdex.autoSave.autoSaveEnabled";
+	static public final String prefAutoSavePrompt = "pdex.autoSave.promptDisplay";
+	static public final String prefDefaultAutoSave = "pdex.autoSave.autoSaveByDefault";
+	static public final String suggestionsFileName = "suggestions.txt";
 
-
-  public Library getCoreLibrary() {
-    if (coreLibrary == null) {
-      File coreFolder = Platform.getContentFile("core");
-      coreLibrary = new Library(coreFolder);
-    }
-    return coreLibrary;
-  }
-
-
-
-  /** Handles the standard Java "Run" or "Present" */
-  public Runner handleLaunch(Sketch sketch, RunnerListener listener,
-                             final boolean present) throws SketchException {
-    JavaBuild build = new JavaBuild(sketch);
-//    String appletClassName = build.build(false);
-    String appletClassName = build.build(true);
-    if (appletClassName != null) {
-      final Runner runtime = new Runner(build, listener);
-      new Thread(new Runnable() {
-        public void run() {
-          // these block until finished
-          if (present) {
-            runtime.present(null);
-          } else {
-            runtime.launch(null);
-          }
-        }
-      }).start();
-      return runtime;
-    }
-    return null;
-  }
-
-
-
-
-
-  public boolean handleExportApplication(Sketch sketch) throws SketchException, IOException {
-    JavaBuild build = new JavaBuild(sketch);
-    return build.exportApplication();
-  }
-
-
-  /**
-   * Any modes that extend JavaMode can override this method to add additional
-   * JARs to be included in the classpath for code completion and error checking
-   * @return searchPath: file-paths separated by File.pathSeparatorChar
-   */
-  public String getSearchPath() {
-    return getCoreLibrary().getJarPath();
-  }
-
-
-
-  static public volatile boolean errorCheckEnabled = true;
-  static public volatile boolean warningsEnabled = true;
-  static public volatile boolean codeCompletionsEnabled = true;
-  static public volatile boolean debugOutputEnabled = false;
-  static public volatile boolean errorLogsEnabled = false;
-  static public volatile boolean autoSaveEnabled = true;
-  static public volatile boolean autoSavePromptEnabled = true;
-  static public volatile boolean defaultAutoSaveEnabled = true;
-  static public volatile boolean ccTriggerEnabled = false;
-  static public volatile boolean importSuggestEnabled = true;
-  static public volatile boolean inspectModeHotkeyEnabled = true;
-  static public int autoSaveInterval = 3; //in minutes
-
-
-  /**
-   * After how many typed characters, code completion is triggered
-   */
-  volatile public static int codeCompletionTriggerLength = 1;
-
-  static public final String prefErrorCheck = "pdex.errorCheckEnabled";
-  static public final String prefWarnings = "pdex.warningsEnabled";
-  static public final String prefDebugOP = "pdex.dbgOutput";
-  static public final String prefErrorLogs = "pdex.writeErrorLogs";
-  static public final String prefAutoSaveInterval = "pdex.autoSaveInterval";
-  static public final String prefAutoSave = "pdex.autoSave.autoSaveEnabled";
-  static public final String prefAutoSavePrompt = "pdex.autoSave.promptDisplay";
-  static public final String prefDefaultAutoSave = "pdex.autoSave.autoSaveByDefault";
-  static public final String suggestionsFileName = "suggestions.txt";
-
-  static public final String COMPLETION_PREF = "pdex.completion";
-  static public final String COMPLETION_TRIGGER_PREF = "pdex.completion.trigger";
-  static public final String SUGGEST_IMPORTS_PREF = "pdex.suggest.imports";
-  static public final String INSPECT_MODE_HOTKEY_PREF = "pdex.inspectMode.hotkey";
+	static public final String COMPLETION_PREF = "pdex.completion";
+	static public final String COMPLETION_TRIGGER_PREF = "pdex.completion.trigger";
+	static public final String SUGGEST_IMPORTS_PREF = "pdex.suggest.imports";
+	static public final String INSPECT_MODE_HOTKEY_PREF = "pdex.inspectMode.hotkey";
 
 //  static volatile public boolean enableTweak = false;
 
-  /**
-   * Stores the white list/black list of allowed/blacklisted imports. These are defined in
-   * suggestions.txt in java mode folder.
-   */
-  static public final Map<String, Set<String>> suggestionsMap = new HashMap<>();
+	/**
+	 * Stores the white list/black list of allowed/blacklisted imports. These are
+	 * defined in suggestions.txt in java mode folder.
+	 */
+	static public final Map<String, Set<String>> suggestionsMap = new HashMap<>();
 
-  public void loadPreferences() {
-    Messages.log("Load PDEX prefs");
-    ensurePrefsExist();
-    errorCheckEnabled = Preferences.getBoolean(prefErrorCheck);
-    warningsEnabled = Preferences.getBoolean(prefWarnings);
-    codeCompletionsEnabled = Preferences.getBoolean(COMPLETION_PREF);
+	public void loadPreferences() {
+		Messages.log("Load PDEX prefs");
+		ensurePrefsExist();
+		errorCheckEnabled = Preferences.getBoolean(prefErrorCheck);
+		warningsEnabled = Preferences.getBoolean(prefWarnings);
+		codeCompletionsEnabled = Preferences.getBoolean(COMPLETION_PREF);
 //    DEBUG = Preferences.getBoolean(prefDebugOP);
-    errorLogsEnabled = Preferences.getBoolean(prefErrorLogs);
-    autoSaveInterval = Preferences.getInteger(prefAutoSaveInterval);
+		errorLogsEnabled = Preferences.getBoolean(prefErrorLogs);
+		autoSaveInterval = Preferences.getInteger(prefAutoSaveInterval);
 //    untitledAutoSaveEnabled = Preferences.getBoolean(prefUntitledAutoSave);
-    autoSaveEnabled = Preferences.getBoolean(prefAutoSave);
-    autoSavePromptEnabled = Preferences.getBoolean(prefAutoSavePrompt);
-    defaultAutoSaveEnabled = Preferences.getBoolean(prefDefaultAutoSave);
-    ccTriggerEnabled = Preferences.getBoolean(COMPLETION_TRIGGER_PREF);
-    importSuggestEnabled = Preferences.getBoolean(SUGGEST_IMPORTS_PREF);
-    inspectModeHotkeyEnabled = Preferences.getBoolean(INSPECT_MODE_HOTKEY_PREF);
-    loadSuggestionsMap();
-  }
+		autoSaveEnabled = Preferences.getBoolean(prefAutoSave);
+		autoSavePromptEnabled = Preferences.getBoolean(prefAutoSavePrompt);
+		defaultAutoSaveEnabled = Preferences.getBoolean(prefDefaultAutoSave);
+		ccTriggerEnabled = Preferences.getBoolean(COMPLETION_TRIGGER_PREF);
+		importSuggestEnabled = Preferences.getBoolean(SUGGEST_IMPORTS_PREF);
+		inspectModeHotkeyEnabled = Preferences.getBoolean(INSPECT_MODE_HOTKEY_PREF);
+		loadSuggestionsMap();
+	}
 
-
-  public void savePreferences() {
-    Messages.log("Saving PDEX prefs");
-    Preferences.setBoolean(prefErrorCheck, errorCheckEnabled);
-    Preferences.setBoolean(prefWarnings, warningsEnabled);
-    Preferences.setBoolean(COMPLETION_PREF, codeCompletionsEnabled);
+	public void savePreferences() {
+		Messages.log("Saving PDEX prefs");
+		Preferences.setBoolean(prefErrorCheck, errorCheckEnabled);
+		Preferences.setBoolean(prefWarnings, warningsEnabled);
+		Preferences.setBoolean(COMPLETION_PREF, codeCompletionsEnabled);
 //    Preferences.setBoolean(prefDebugOP, DEBUG);
-    Preferences.setBoolean(prefErrorLogs, errorLogsEnabled);
-    Preferences.setInteger(prefAutoSaveInterval, autoSaveInterval);
+		Preferences.setBoolean(prefErrorLogs, errorLogsEnabled);
+		Preferences.setInteger(prefAutoSaveInterval, autoSaveInterval);
 //    Preferences.setBoolean(prefUntitledAutoSave,untitledAutoSaveEnabled);
-    Preferences.setBoolean(prefAutoSave, autoSaveEnabled);
-    Preferences.setBoolean(prefAutoSavePrompt, autoSavePromptEnabled);
-    Preferences.setBoolean(prefDefaultAutoSave, defaultAutoSaveEnabled);
-    Preferences.setBoolean(COMPLETION_TRIGGER_PREF, ccTriggerEnabled);
-    Preferences.setBoolean(SUGGEST_IMPORTS_PREF, importSuggestEnabled);
-    Preferences.setBoolean(INSPECT_MODE_HOTKEY_PREF, inspectModeHotkeyEnabled);
-  }
+		Preferences.setBoolean(prefAutoSave, autoSaveEnabled);
+		Preferences.setBoolean(prefAutoSavePrompt, autoSavePromptEnabled);
+		Preferences.setBoolean(prefDefaultAutoSave, defaultAutoSaveEnabled);
+		Preferences.setBoolean(COMPLETION_TRIGGER_PREF, ccTriggerEnabled);
+		Preferences.setBoolean(SUGGEST_IMPORTS_PREF, importSuggestEnabled);
+		Preferences.setBoolean(INSPECT_MODE_HOTKEY_PREF, inspectModeHotkeyEnabled);
+	}
 
-  public void loadSuggestionsMap() {
-    File suggestionsListFile = new File(getFolder() + File.separator
-        + suggestionsFileName);
-    if (!suggestionsListFile.exists()) {
-      Messages.loge("Suggestions file not found! "
-          + suggestionsListFile.getAbsolutePath());
-      return;
-    }
+	public void loadSuggestionsMap() {
+		File suggestionsListFile = new File(getFolder() + File.separator + suggestionsFileName);
+		if (!suggestionsListFile.exists()) {
+			Messages.loge("Suggestions file not found! " + suggestionsListFile.getAbsolutePath());
+			return;
+		}
 
-    try {
-      BufferedReader br = new BufferedReader(
-                                             new FileReader(suggestionsListFile));
-      while (true) {
-        String line = br.readLine();
-        if (line == null) {
-          break;
-        }
-        line = line.trim();
-        if (line.startsWith("#")) {
-          continue;
-        } else {
-          if (line.contains("=")) {
-            String key = line.split("=")[0];
-            String val = line.split("=")[1];
-            if (suggestionsMap.containsKey(key)) {
-              suggestionsMap.get(key).add(val);
-            } else {
-              HashSet<String> set = new HashSet<>();
-              set.add(val);
-              suggestionsMap.put(key, set);
-            }
-          }
-        }
-      }
-      br.close();
-    } catch (IOException e) {
-      Messages.loge("IOException while reading suggestions file:"
-          + suggestionsListFile.getAbsolutePath());
-    }
-  }
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(suggestionsListFile));
+			while (true) {
+				String line = br.readLine();
+				if (line == null) {
+					break;
+				}
+				line = line.trim();
+				if (line.startsWith("#")) {
+					continue;
+				} else {
+					if (line.contains("=")) {
+						String key = line.split("=")[0];
+						String val = line.split("=")[1];
+						if (suggestionsMap.containsKey(key)) {
+							suggestionsMap.get(key).add(val);
+						} else {
+							HashSet<String> set = new HashSet<>();
+							set.add(val);
+							suggestionsMap.put(key, set);
+						}
+					}
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			Messages.loge("IOException while reading suggestions file:" + suggestionsListFile.getAbsolutePath());
+		}
+	}
 
-
-  public void ensurePrefsExist() {
-    //TODO: Need to do a better job of managing prefs. Think lists.
-    if (Preferences.get(prefErrorCheck) == null)
-      Preferences.setBoolean(prefErrorCheck, errorCheckEnabled);
-    if (Preferences.get(prefWarnings) == null)
-      Preferences.setBoolean(prefWarnings, warningsEnabled);
-    if (Preferences.get(COMPLETION_PREF) == null)
-      Preferences.setBoolean(COMPLETION_PREF, codeCompletionsEnabled);
-    if (Preferences.get(prefDebugOP) == null)
+	public void ensurePrefsExist() {
+		// TODO: Need to do a better job of managing prefs. Think lists.
+		if (Preferences.get(prefErrorCheck) == null)
+			Preferences.setBoolean(prefErrorCheck, errorCheckEnabled);
+		if (Preferences.get(prefWarnings) == null)
+			Preferences.setBoolean(prefWarnings, warningsEnabled);
+		if (Preferences.get(COMPLETION_PREF) == null)
+			Preferences.setBoolean(COMPLETION_PREF, codeCompletionsEnabled);
+		if (Preferences.get(prefDebugOP) == null)
 //      Preferences.setBoolean(prefDebugOP, DEBUG);
-    if (Preferences.get(prefErrorLogs) == null)
-      Preferences.setBoolean(prefErrorLogs, errorLogsEnabled);
-    if (Preferences.get(prefAutoSaveInterval) == null)
-      Preferences.setInteger(prefAutoSaveInterval, autoSaveInterval);
+			if (Preferences.get(prefErrorLogs) == null)
+				Preferences.setBoolean(prefErrorLogs, errorLogsEnabled);
+		if (Preferences.get(prefAutoSaveInterval) == null)
+			Preferences.setInteger(prefAutoSaveInterval, autoSaveInterval);
 //    if(Preferences.get(prefUntitledAutoSave) == null)
 //      Preferences.setBoolean(prefUntitledAutoSave,untitledAutoSaveEnabled);
-    if (Preferences.get(prefAutoSave) == null)
-      Preferences.setBoolean(prefAutoSave, autoSaveEnabled);
-    if (Preferences.get(prefAutoSavePrompt) == null)
-      Preferences.setBoolean(prefAutoSavePrompt, autoSavePromptEnabled);
-    if (Preferences.get(prefDefaultAutoSave) == null)
-      Preferences.setBoolean(prefDefaultAutoSave, defaultAutoSaveEnabled);
-    if (Preferences.get(COMPLETION_TRIGGER_PREF) == null)
-      Preferences.setBoolean(COMPLETION_TRIGGER_PREF, ccTriggerEnabled);
-    if (Preferences.get(SUGGEST_IMPORTS_PREF) == null)
-      Preferences.setBoolean(SUGGEST_IMPORTS_PREF, importSuggestEnabled);
-    if (Preferences.get(INSPECT_MODE_HOTKEY_PREF) == null)
-      Preferences.setBoolean(INSPECT_MODE_HOTKEY_PREF, inspectModeHotkeyEnabled);
-  }
+		if (Preferences.get(prefAutoSave) == null)
+			Preferences.setBoolean(prefAutoSave, autoSaveEnabled);
+		if (Preferences.get(prefAutoSavePrompt) == null)
+			Preferences.setBoolean(prefAutoSavePrompt, autoSavePromptEnabled);
+		if (Preferences.get(prefDefaultAutoSave) == null)
+			Preferences.setBoolean(prefDefaultAutoSave, defaultAutoSaveEnabled);
+		if (Preferences.get(COMPLETION_TRIGGER_PREF) == null)
+			Preferences.setBoolean(COMPLETION_TRIGGER_PREF, ccTriggerEnabled);
+		if (Preferences.get(SUGGEST_IMPORTS_PREF) == null)
+			Preferences.setBoolean(SUGGEST_IMPORTS_PREF, importSuggestEnabled);
+		if (Preferences.get(INSPECT_MODE_HOTKEY_PREF) == null)
+			Preferences.setBoolean(INSPECT_MODE_HOTKEY_PREF, inspectModeHotkeyEnabled);
+	}
 
+	static public void main(String[] args) {
 
-  static public void main(String[] args) {
-    processing.app.Base.main(args);
-  }
+		String sketchPath = "/Users/christianluetticke/Documents/processing/java/src/test/source/Sketch.pde";
+
+		JavaMode mode = (JavaMode) ModeContribution
+				.load(null, Platform.getContentFile("modes/java"), "processing.mode.java.JavaMode").getMode();
+
+		Sketch sketch = new Sketch(sketchPath, mode);
+		
+		//Necessary for PdeProcessor to work: Preferences.getInteger("editor.tabs.size");
+		Preferences.set("editor.tabs.size", "2");
+
+		JavaBuild build = new JavaBuild(sketch);
+		String appletClassName = null;
+		try {
+			appletClassName = build.build(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("appletClassName: " + appletClassName);
+	}
 }
