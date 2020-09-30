@@ -258,8 +258,9 @@ public class JavaModeTESTER extends Mode {
 
 		JavaBuildCUSTOM build = new JavaBuildCUSTOM(sketch);
 		String appletClassName = null;
+		
 		try {
-			appletClassName = build.build(true);
+			appletClassName = build.build(sketch.makeTempFolder(), sketch.makeTempFolder(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
