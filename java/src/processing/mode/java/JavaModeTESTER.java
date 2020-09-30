@@ -256,7 +256,7 @@ public class JavaModeTESTER extends Mode {
 		//Necessary for PdeProcessor to work: Preferences.getInteger("editor.tabs.size");
 		Preferences.set("editor.tabs.size", "2");
 
-		JavaBuild build = new JavaBuild(sketch);
+		JavaBuildCUSTOM build = new JavaBuildCUSTOM(sketch);
 		String appletClassName = null;
 		try {
 			appletClassName = build.build(true);
