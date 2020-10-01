@@ -62,93 +62,11 @@ public class CompilerCUSTOM {
     SketchException exception = null;
     boolean success = false;
 
-    /**
-     * [-g, -Xemacs, -source, 1.7, -target, 1.7, -encoding, utf8, 
-     * -classpath, 
-     * /var/folders/j9/fw7_m04j7n56syfdbh00g3tc0000gq/T/Sketch2895377152289472790temp:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-linux-armv6hf.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-linux-armv6hf.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-linux-aarch64.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-linux-aarch64.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-macosx-universal.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-linux-amd64.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-linux-i586.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-windows-i586.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-linux-i586.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-linux-amd64.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/core.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-macosx-universal.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-windows-i586.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/gluegen-rt-natives-windows-amd64.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin/../../build/macosx/work/Processing.app/Contents/Java/core/library/jogl-all-natives-windows-amd64.jar:
-     * /Users/christianluetticke/Documents/processing/java/bin:
-     * /Users/christianluetticke/Documents/processing/java/mode/antlr.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/classpath-explorer-1.0.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/com.ibm.icu.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/jdi.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/jdimodel.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/jdtCompilerAdapter.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/jsoup-1.7.1.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.core.contenttype.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.core.jobs.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.core.resources.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.core.runtime.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.equinox.common.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.equinox.preferences.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.jdt.core.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.osgi.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.eclipse.text.jar:
-     * /Users/christianluetticke/Documents/processing/java/mode/org.netbeans.swing.outline.jar:
-     * /Users/christianluetticke/Documents/processing/app/bin:
-     * /Users/christianluetticke/Documents/processing/core/bin:
-     * /Users/christianluetticke/Documents/processing/core/library/jogl-all.jar:
-     * /Users/christianluetticke/Documents/processing/core/library/gluegen-rt.jar:
-     * /Users/christianluetticke/Documents/processing/core/apple.jar:
-     * /Users/christianluetticke/Documents/processing/app/lib/jna.jar:
-     * /Users/christianluetticke/Documents/processing/app/lib/jna-platform.jar:
-     * /Users/christianluetticke/Documents/processing/app/lib/ant.jar:
-     * /Users/christianluetticke/Documents/processing/app/lib/ant-launcher.jar:
-     * /Users/christianluetticke/Documents/processing/app/test/lib/junit-4.8.1.jar:
-     * /Users/christianluetticke/Documents/polyglot/tools/java_cup/classes:
-     * /Users/christianluetticke/Documents/polyglot/tools/ppg/classes:
-     * /Users/christianluetticke/Documents/polyglot/tools/pth/classes:
-     * /Users/christianluetticke/Documents/polyglot/classes:
-     * /Users/christianluetticke/Documents/polyglot/lib/itextpdf.jar:
-     * /Users/christianluetticke/Documents/ent/lib/ent.jar:
-     * /Users/christianluetticke/Documents/ent/lib/ent-rt.jar:
-     * /Users/christianluetticke/Documents/ent/lib/guava-18.0.jar:
-     * /Users/christianluetticke/Documents/ent/lib/java_cup.jar:
-     * /Users/christianluetticke/Documents/ent/lib/jflex.jar:
-     * /Users/christianluetticke/Documents/ent/lib/ppg.jar:
-     * /Users/christianluetticke/Documents/ent/lib/polyglot.jar:
-     * /Users/christianluetticke/Documents/ent/lib/pth.jar:
-     * /Users/christianluetticke/eclipse/jee-2020-09/Eclipse.app/Contents/Eclipse/configuration/org.eclipse.osgi/399/0/.cp/lib/javaagent-shaded.jar, 
-     * -nowarn, 
-     * -d, /var/folders/j9/fw7_m04j7n56syfdbh00g3tc0000gq/T/Sketch2895377152289472790temp]
-     */
+    String[] command = generateCommand(build);
     
+    String[] commandCUSTOM = generateCommandCUSTOM(build);
     
-    
-    String baseCommand[] = new String[] {
-      "-g",
-      "-Xemacs",
-      //"-noExit",  // not necessary for ecj
-      "-source", "1.7",
-      "-target", "1.7",
-      "-encoding", "utf8",
-      "-classpath", build.getClassPath(),
-      "-nowarn", // we're not currently interested in warnings (works in ecj)
-      "-d", build.getBinFolder().getAbsolutePath() // output the classes in the buildPath
-    };
-    //PApplet.println(baseCommand);
-    
-    
-
-    String[] sourceFiles = Util.listFiles(build.getSrcFolder(), false, ".java");
-    String[] command = PApplet.concat(baseCommand, sourceFiles);
-    //PApplet.println(command);
+    polyglot.main.Main.main(commandCUSTOM);
 
     try {
       // Load errors into a local StringBuilder
@@ -387,6 +305,47 @@ public class CompilerCUSTOM {
     return success;
   }
 
+
+private static String[] generateCommand(JavaBuildCUSTOM build) {
+	String baseCommand[] = new String[] {
+      "-g",
+      "-Xemacs",
+      //"-noExit",  // not necessary for ecj
+      "-source", "1.7",
+      "-target", "1.7",
+      "-encoding", "utf8",
+      "-classpath", build.getClassPath(),
+      "-nowarn", // we're not currently interested in warnings (works in ecj)
+      "-d", build.getBinFolder().getAbsolutePath() // output the classes in the buildPath
+    };
+    PApplet.println(baseCommand);
+
+    String[] sourceFiles = Util.listFiles(build.getSrcFolder(), false, ".java");
+    String[] command = PApplet.concat(baseCommand, sourceFiles);
+    //PApplet.println(command);
+    PApplet.println(command);
+	return command;
+}
+
+
+private static String[] generateCommandCUSTOM(JavaBuildCUSTOM build) {
+	
+	String sketchPath = "/Users/christianluetticke/Documents/processing/java/src/test/source/Sketch.pde";
+	
+	String baseCommand[] = new String[] {
+      "-g",
+      "-v",
+      "-classpath", build.getClassPath(),
+      "-d", build.getBinFolder().getAbsolutePath() // output the classes in the buildPath
+    };
+    PApplet.println(baseCommand);
+
+    String[] sourceFiles = Util.listFiles(build.getSrcFolder(), false, ".java");
+    String[] command = PApplet.concat(baseCommand, sourceFiles);
+    //PApplet.println(command);
+    PApplet.println(command);
+	return command;
+}
 
   static protected void handleCrustyCode() {
     System.err.println("This code needs to be updated " +
