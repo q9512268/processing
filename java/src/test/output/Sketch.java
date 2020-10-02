@@ -1,4 +1,5 @@
 package test.output;
+
 import processing.core.*; 
 import processing.data.*; 
 import processing.event.*; 
@@ -13,10 +14,10 @@ import java.io.InputStream;
 import java.io.OutputStream; 
 import java.io.IOException; 
 
-public class Expected extends PApplet {
+public class Sketch extends PApplet {
 
 public void setup(){
-  println("Hello, World!");
+  println("Hello ENT!");
 }
 
 public void draw(){

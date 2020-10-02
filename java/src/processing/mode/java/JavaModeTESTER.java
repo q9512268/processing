@@ -247,23 +247,31 @@ public class JavaModeTESTER extends Mode {
 	static public void main(String[] args) {
 
 		String sketchPath = "/Users/christianluetticke/Documents/processing/java/src/test/source/Sketch.pde";
-
-		JavaMode mode = (JavaMode) ModeContribution
-				.load(null, Platform.getContentFile("modes/java"), "processing.mode.java.JavaMode").getMode();
-
+		JavaMode mode = (JavaMode) ModeContribution.load(null, Platform.getContentFile("modes/java"), "processing.mode.java.JavaMode").getMode();
 		Sketch sketch = new Sketch(sketchPath, mode);
 		
 		//Necessary for PdeProcessor to work: Preferences.getInteger("editor.tabs.size");
 		Preferences.set("editor.tabs.size", "2");
-
-		JavaBuildCUSTOM build = new JavaBuildCUSTOM(sketch);
-		String appletClassName = null;
 		
+		boolean useEntPreprocessor = false;
+		boolean useEntCompiler = true;
+		boolean sizeWarning = true;
 		try {
-			appletClassName = build.build(sketch.makeTempFolder(), sketch.makeTempFolder(), true);
+			
+			String appletClassName = new JavaBuildCUSTOM().build(
+					sketch, 
+					mode, 
+					sketch.makeTempFolder(), 
+					sketch.makeTempFolder(), 
+					sizeWarning,
+					useEntPreprocessor,
+					useEntCompiler);
+			
+			System.out.println("appletClassName: " + appletClassName);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("appletClassName: " + appletClassName);
+		
 	}
 }

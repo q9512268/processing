@@ -51,7 +51,7 @@ public class Compiler {
   /**
    * Compile with ECJ. See http://j.mp/8paifz for documentation.
    *
-   * @param sketch Sketch object to be compiled, used for placing exceptions
+   * @param data.sketch Sketch object to be compiled, used for placing exceptions
    * @param buildPath Where the temporary files live and will be built from.
    * @return true if successful.
    * @throws SketchException Only if there's a problem. Only then.

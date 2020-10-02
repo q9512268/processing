@@ -22,5 +22,14 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/processing-app"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/processing-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/polyglot-master"/>
+	<classpathentry kind="lib" path="/ent/lib/ent.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/ent-rt.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/java_cup.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/jflex.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/polyglot.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/ppg.jar"/>
+	<classpathentry kind="lib" path="/ent/lib/pth.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
